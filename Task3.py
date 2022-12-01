@@ -18,5 +18,3 @@ def solution(l):
     return 0
 
 
-a = solution([6,3,4,2,1])
-print(a)

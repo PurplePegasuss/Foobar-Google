@@ -39,4 +39,3 @@ def solution(i):
     sieved_aray = delete_zeros(unsieved_array)
     print(''.join(sieved_aray)[i:i+5])
 
-solution(3)

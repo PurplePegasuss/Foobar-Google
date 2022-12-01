@@ -104,4 +104,3 @@ def solution(matrix):
                     min_shortest_path = shortest_path
     return min_shortest_path + 1
 
-print(solution([[0,0,0,0,0],[1,1,1,1,1],[0,0,0,0,0]]))

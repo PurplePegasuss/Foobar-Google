@@ -21,4 +21,3 @@ def xor_o1(n) :
     if n % 4 == 2 :
         return n + 1
     return 0
-print(solution(17,4))
