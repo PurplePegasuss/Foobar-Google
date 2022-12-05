@@ -73,7 +73,7 @@ def A_molod(matrix):
         if open.qsize() == 0:
             return max_int_path
                         
-def at_least_two_zeroes_near(matrix,i,j):
+def at_least_two_zeroes_near(matrix,i,j):   
     count_zeros = 0
     l = len(matrix)
     w = len(matrix[0])
