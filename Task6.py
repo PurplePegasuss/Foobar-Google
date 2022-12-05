@@ -1,8 +1,6 @@
-from fractions import Fraction, gcd
-import math
-from functools import reduce
+from fractions import Fraction
 
-def check_if_terminal(state,state_id):
+def check_if_terminal(state,state_id=0):
     clean_terminal = [0]*len(state)
     loop_terminal = list(clean_terminal)
     loop_terminal[state_id] = 1
@@ -72,7 +70,9 @@ def substract_two_matrices(matrix1,matrix2):
 def solution(matrix):
     n_states = len(matrix)
     terminal_states = []
-    
+    if n_states == 1:
+        return [1,1]
+        
     for i in range(n_states):
         if check_if_terminal(matrix[i],i):
             terminal_states.append(i)
@@ -89,10 +89,35 @@ def solution(matrix):
         for j in range(len(r[0])):
             for k in range(len(r)):
                 b[i][j] += n[i][k] * r[k][j]
-    x = reduce(gcd, [9,3])
-    array_of_denums = []
+    
+    common_denum_b  = []
+
+
     for i in range(len(b[0])):
-        array_of_denums.append(b[0][i].denominator)
+        common_denum_b.append(b[0][i].denominator)
+
+    lcm = lcm_list(common_denum_b,0)
+
+    results = []
+    for i in range(len(b[0])):
+        coef = lcm/b[0][i].denominator
+        results.append(int(b[0][i].numerator*coef))
+    results.append(lcm)
+
+    return results
+
+def gcdd(dem1, dem2):
+    if (dem1 == 0):
+        return dem2
+    else:
+        return gcdd(dem2 % dem1, dem1)
+ 
+def lcm_list(array, i):
+    if (i+1 == len(array)):
+        return array[i]
+    b = lcm_list(array, i + 1)
+    return int(array[i]*b/gcdd(array[i],b))
+
 
 def calculate_probs(state_array):
     array_sum = sum(state_array)
@@ -101,9 +126,9 @@ def calculate_probs(state_array):
             state_array[i] = Fraction(state_array[i],array_sum)
     return state_array
 
-solution([[0, 2, 1, 0, 0],
-          [0, 0, 0, 3, 4],
-          [0, 0, 0, 0, 0],
-          [0, 0, 0, 0, 0],
-          [0, 0, 0, 0, 0]])
+def sort_states(matrix):
+    print(matrix.sort(key=check_if_terminal))
+
+sort_states([[1, 1, 1, 0, 1, 0, 1, 0, 1, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [1, 0, 1, 1, 1, 0, 1, 0, 1, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [1, 0, 1, 0, 1, 1, 1, 0, 1, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [1, 0, 1, 0, 1, 0, 1, 1, 1, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [1, 0, 1, 0, 1, 0, 1, 0, 1, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]])
+print(solution([[1, 1, 1, 0, 1, 0, 1, 0, 1, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [1, 0, 1, 1, 1, 0, 1, 0, 1, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [1, 0, 1, 0, 1, 1, 1, 0, 1, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [1, 0, 1, 0, 1, 0, 1, 1, 1, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [1, 0, 1, 0, 1, 0, 1, 0, 1, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]))
 
