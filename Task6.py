@@ -12,6 +12,14 @@ def check_if_terminal(state,state_id=0):
 def identity_matrix(n):
     return [[1 if i==j else 0 for j in range(n)] for i in range(n)]
 
+def obtain_submatrix(matrix, rows, columns):
+    submatrix = []
+    for row in rows:
+        new_row = []
+        for col in columns:
+            new_row.append(matrix[row][col])
+        submatrix.append(new_row)
+    return submatrix
 
 def transpose_matrix(matrix):
     return map(list,zip(*matrix))
@@ -70,16 +78,21 @@ def substract_two_matrices(matrix1,matrix2):
 def solution(matrix):
     n_states = len(matrix)
     terminal_states = []
+    non_terminal_states = []
     if n_states == 1:
         return [1,1]
-        
+#   matrix = sort_states(matrix)
     for i in range(n_states):
         if check_if_terminal(matrix[i],i):
             terminal_states.append(i)
+        else:
+            non_terminal_states.append(i)
+
     probs_matrix = [calculate_probs(matrix[i]) for i in range(n_states)]
     n_terminal_states = len(terminal_states)
-    q = [calculate_probs(matrix[i])[:n_states-n_terminal_states] for i in range(n_states-n_terminal_states)]
-    r = [calculate_probs(matrix[i])[n_states-n_terminal_states:] for i in range(n_states-n_terminal_states)]
+
+    q = obtain_submatrix(matrix,non_terminal_states,non_terminal_states)
+    r = obtain_submatrix(matrix,non_terminal_states,terminal_states)
     i = [calculate_probs(matrix[i])[n_states-n_terminal_states:] for i in range(n_terminal_states-1,n_states)]
 
     m = substract_two_matrices(identity_matrix(n_states-n_terminal_states),q)
@@ -89,7 +102,7 @@ def solution(matrix):
         for j in range(len(r[0])):
             for k in range(len(r)):
                 b[i][j] += n[i][k] * r[k][j]
-    
+   
     common_denum_b  = []
 
 
@@ -127,8 +140,14 @@ def calculate_probs(state_array):
     return state_array
 
 def sort_states(matrix):
-    print(matrix.sort(key=check_if_terminal))
+    for j in range(1,len(matrix)):
+        for i in range(1,len(matrix)):
+            prev_state = check_if_terminal(matrix[i-1])
+            cur_state = check_if_terminal(matrix[i])
+            if prev_state == True and cur_state == False:
+                matrix[i-1],matrix[i] = matrix[i],matrix[i-1]
+    return matrix
 
-sort_states([[1, 1, 1, 0, 1, 0, 1, 0, 1, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [1, 0, 1, 1, 1, 0, 1, 0, 1, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [1, 0, 1, 0, 1, 1, 1, 0, 1, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [1, 0, 1, 0, 1, 0, 1, 1, 1, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [1, 0, 1, 0, 1, 0, 1, 0, 1, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]])
-print(solution([[1, 1, 1, 0, 1, 0, 1, 0, 1, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [1, 0, 1, 1, 1, 0, 1, 0, 1, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [1, 0, 1, 0, 1, 1, 1, 0, 1, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [1, 0, 1, 0, 1, 0, 1, 1, 1, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [1, 0, 1, 0, 1, 0, 1, 0, 1, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]))
+
+print(solution([[1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]))
 
